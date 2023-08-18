@@ -26,7 +26,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "mbedtls/sha1.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -1690,15 +1690,43 @@ PUTCHAR_PROTOTYPE
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void const * argument)
 {
-  /* init code for USB_HOST */
-  MX_USB_HOST_Init();
-  /* USER CODE BEGIN 5 */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END 5 */
+	  /* init code for USB_HOST */
+	  MX_USB_HOST_Init();
+	  /* USER CODE BEGIN 5 */
+	  /* Infinite loop */
+	  int loop = 0;
+	  for(;;)
+	  {
+	    osDelay(10000);
+
+	    printf("[%d]----------\r\n", loop);
+	    printf("Mbed TLS port on STM32F746G-DISCO board by Rojar Smith\r\n");
+
+	    /* sha1 test */
+	    char *source_cxt = "Rojar Smith";
+	    char encrypt_cxt[60];
+
+	    printf("source context is:%s\r\n", source_cxt);
+
+	    mbedtls_sha1_context sha1_ctx;
+	    mbedtls_sha1_init(&sha1_ctx);
+	    mbedtls_sha1_starts(&sha1_ctx);
+	    mbedtls_sha1_update(&sha1_ctx, (unsigned char *)source_cxt, strlen(source_cxt));
+	    mbedtls_sha1_finish(&sha1_ctx, (unsigned char *)encrypt_cxt);
+	    mbedtls_sha1_free(&sha1_ctx);
+
+	    int i = 0;
+	    printf("sha1 encrypt context is:[");
+	    // 82b1e6dc4fb9b011b4ecae116f694359d262ebc5
+	    while (i <= 20) {
+	      printf("%02x", encrypt_cxt[i]);
+	      i++;
+	    }
+	    printf("]\r\n");
+
+	    loop++;
+	  }
+	  /* USER CODE END 5 */
 }
 
 /**
