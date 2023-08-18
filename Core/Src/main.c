@@ -21,6 +21,7 @@
 #include "string.h"
 #include "cmsis_os.h"
 #include "fatfs.h"
+#include "mbedtls.h"
 #include "usb_host.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -205,6 +206,9 @@ int main(void)
   MX_USART6_UART_Init();
   MX_FATFS_Init();
   MX_RNG_Init();
+  MX_MBEDTLS_Init();
+  /* Call PreOsInit function */
+  MX_MBEDTLS_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
